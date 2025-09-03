@@ -1,0 +1,22 @@
+{
+  "name": "demogithabshukan",
+  "version": "1.0.0",
+  "description": "To make it easy for you to get started with GitLab, here's a list of recommended next steps.",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/andreyshukan554-group/demoGithabShukan.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/andreyshukan554-group/demoGithabShukan/issues"
+  },
+  "homepage": "https://gitlab.com/andreyshukan554-group/demoGithabShukan#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.55.0",
+    "@types/node": "^24.3.0"
+  }
+}
