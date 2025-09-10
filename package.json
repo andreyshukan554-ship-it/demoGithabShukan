@@ -3,7 +3,12 @@
   "version": "1.0.0",
   "description": "To make it easy for you to get started with GitLab, here's a list of recommended next steps.",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "npx playwright test",
+    "testui": "npx playwright test --ui",
+    "report": "npx playwright show-report",
+    "codegen": "npx playwright codegen"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://gitlab.com/andreyshukan554-group/demoGithabShukan.git"
@@ -16,6 +21,7 @@
   },
   "homepage": "https://gitlab.com/andreyshukan554-group/demoGithabShukan#readme",
   "devDependencies": {
+    "@faker-js/faker": "^10.0.0",
     "@playwright/test": "^1.55.0",
     "@types/node": "^24.3.0"
   }
