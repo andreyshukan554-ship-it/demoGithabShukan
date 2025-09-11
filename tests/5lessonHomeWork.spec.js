@@ -4,8 +4,21 @@ import { MainPage, RegisterPage, MainPageAthorized, NewArticlePage, ArticlePage,
 
 const URL = 'https://realworld.qa.guru/';
 
+const newArticleFields = {
+    title: faker.internet.password({length: 15}),
+    description: faker.lorem.words(5),
+    content: faker.lorem.text(),
+    tag: faker.lorem.word(5),
+};
+
+const commentText = {
+    textForComment: faker.lorem.words(6),
+};
+
 test.describe('Articles e2e', () => {
-    test.beforeEach( "New user registration",async ({ page }) => {
+    test.beforeEach( "precondition data creation (user, article, comment",async ({ page }) => {
+        //preconditions
+        //New user registration
         await page.goto(URL);
         const user = {
             name: faker.person.fullName(),
@@ -18,31 +31,26 @@ test.describe('Articles e2e', () => {
 
         await mainPage.gotoRegister();
         await registerPage.register(user);
-//проверка что пользователь зарегестрирован
-        await expect(page.getByRole('navigation')).toContainText(user.name);
+
+        //New article creation
+
+        const mainPageAthorized = new MainPageAthorized(page);
+        const newArticlePage = new NewArticlePage(page);
+
+        await mainPageAthorized.gotoNewArticle();
+        await newArticlePage.CreateNewArticle(newArticleFields);
+
     });
 
-    test.describe('Articles', () => {
-        test.beforeEach('New Article creation', async ({page,}) => {
-            const newArticleFields = {
-                title: faker.lorem.words(3),
-                description: faker.lorem.words(5),
-                content: faker.lorem.text(),
-                tag: faker.lorem.word(5),
-            };
 
-            const mainPageAthorized = new MainPageAthorized(page);
-            const newArticlePage = new NewArticlePage(page);
-
-            await mainPageAthorized.gotoNewArticle();
-            await newArticlePage.CreateNewArticle(newArticleFields)
+        test('Check created article from preconditions', async ({page,}) => {
 
             await expect(page.getByRole('heading')).toContainText(newArticleFields.title);
         });
 
-        test.beforeEach('Article Edit', async ({page,}) => {
+        test('Article Edit', async ({page,}) => {
             const editArticleFields = {
-                title: faker.lorem.words(3),
+                title: faker.lorem.slug({min: 5, max: 7}),
                 description: faker.lorem.words(5),
                 content: faker.lorem.text(),
                 tag: faker.lorem.word(5),
@@ -58,25 +66,13 @@ test.describe('Articles e2e', () => {
         });
 
 
-        test.beforeEach('Post Comment', async ({page,}) => {
-            const commentText = {
-                textForComment: faker.lorem.words(6),
-            };
+        test('Post Comment', async ({page,}) => {
 
             const articlePage = new ArticlePage(page);
 
             await articlePage.postComment(commentText);
 
             await expect(page.getByRole('main')).toContainText(commentText.textForComment);
-        });
-
-        test.beforeEach('Comment Delete', async ({page,}) => {
-
-            const articlePage = new ArticlePage(page);
-
-            await articlePage.deleteComment(page);
-
-            await expect(page.getByRole('main')).toContainText('There are no comments yet...');
         });
 
         test('Article Delete', async ({page,}) => {
@@ -88,7 +84,18 @@ test.describe('Articles e2e', () => {
             await expect(page.getByRole('main')).toContainText('Your Feed');
         });
 
-    });
+        test('Comment Delete', async ({page,}) => {
+
+            const articlePage = new ArticlePage(page);
+
+            await articlePage.postComment(commentText);
+            await articlePage.deleteComment(page);
+
+            await expect(page.getByRole('main')).toContainText('There are no comments yet...');
+        });
+
+
+
 
 });
 
