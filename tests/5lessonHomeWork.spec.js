@@ -4,6 +4,12 @@ import { MainPage, RegisterPage, MainPageAthorized, NewArticlePage, ArticlePage,
 
 const URL = 'https://realworld.qa.guru/';
 
+const user = {
+    name: faker.person.fullName(),
+    email: faker.internet.email(),
+    password: faker.internet.password(),
+};
+
 const newArticleFields = {
     title: faker.internet.password({length: 15}),
     description: faker.lorem.words(5),
@@ -15,16 +21,31 @@ const commentText = {
     textForComment: faker.lorem.words(6),
 };
 
-test.describe('Articles e2e', () => {
-    test.beforeEach( "precondition data creation (user, article, comment",async ({ page }) => {
+test('Article Creation', async ({page,}) => {
+
+    await page.goto(URL);
+
+    const mainPage = new MainPage(page);
+    const registerPage = new RegisterPage(page);
+
+    await mainPage.gotoRegister();
+    await registerPage.register(user);
+
+    const mainPageAthorized = new MainPageAthorized(page);
+    const newArticlePage = new NewArticlePage(page);
+
+    await mainPageAthorized.gotoNewArticle();
+    await newArticlePage.CreateNewArticle(newArticleFields);
+
+    await expect(page.getByRole('heading')).toContainText(newArticleFields.title);
+});
+
+
+test.describe('Articles', () => {
+    test.beforeEach( "precondition data creation (user, article)",async ({ page }) => {
         //preconditions
         //New user registration
         await page.goto(URL);
-        const user = {
-            name: faker.person.fullName(),
-            email: faker.internet.email(),
-            password: faker.internet.password(),
-        };
 
         const mainPage = new MainPage(page);
         const registerPage = new RegisterPage(page);
@@ -41,12 +62,6 @@ test.describe('Articles e2e', () => {
         await newArticlePage.CreateNewArticle(newArticleFields);
 
     });
-
-
-        test('Check created article from preconditions', async ({page,}) => {
-
-            await expect(page.getByRole('heading')).toContainText(newArticleFields.title);
-        });
 
         test('Article Edit', async ({page,}) => {
             const editArticleFields = {
@@ -93,9 +108,6 @@ test.describe('Articles e2e', () => {
 
             await expect(page.getByRole('main')).toContainText('There are no comments yet...');
         });
-
-
-
 
 });
 
