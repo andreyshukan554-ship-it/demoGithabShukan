@@ -33,11 +33,12 @@ test('Article Creation', async ({page,}) => {
 
     const mainPageAthorized = new MainPageAthorized(page);
     const newArticlePage = new NewArticlePage(page);
+    const articlePage = new ArticlePage(page);
 
     await mainPageAthorized.gotoNewArticle();
     await newArticlePage.CreateNewArticle(newArticleFields);
 
-    await expect(page.getByRole('heading')).toContainText(newArticleFields.title);
+    await expect(articlePage.articleHeadder).toContainText(newArticleFields.title);
 });
 
 
@@ -77,7 +78,7 @@ test.describe('Articles', () => {
             await articlePage.gotoEditArticlePage();
             await editArticlePage.EditArticle(editArticleFields)
 
-            await expect(page.getByRole('heading')).toContainText(editArticleFields.title);
+            await expect(articlePage.articleHeadder).toContainText(editArticleFields.title);
         });
 
 
@@ -87,16 +88,17 @@ test.describe('Articles', () => {
 
             await articlePage.postComment(commentText);
 
-            await expect(page.getByRole('main')).toContainText(commentText.textForComment);
+            await expect(articlePage.articleCommentText).toContainText(commentText.textForComment);
         });
 
         test('Article Delete', async ({page,}) => {
 
             const articlePage = new ArticlePage(page);
+            const mainPageAthorized = new MainPageAthorized(page);
 
             await articlePage.deleteArticle(page);
 
-            await expect(page.getByRole('main')).toContainText('Your Feed');
+            await expect(mainPageAthorized.mainPageFeed).toContainText('Your Feed');
         });
 
         test('Comment Delete', async ({page,}) => {
@@ -106,8 +108,7 @@ test.describe('Articles', () => {
             await articlePage.postComment(commentText);
             await articlePage.deleteComment(page);
 
-            await expect(page.getByRole('main')).toContainText('There are no comments yet...');
+            await expect(articlePage.articleCommentText).toContainText('There are no comments yet...');
         });
-
 });
 
