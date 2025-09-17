@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { faker } from '@faker-js/faker';
-import { MainPage, RegisterPage, MainPageAthorized, NewArticlePage, ArticlePage, EditArticlePage } from '../src/pages/index';
+import { MainPage, RegisterPage, ArticlePage } from '../src/pages/index';
 
 const URL = 'https://realworld.qa.guru/';
 
@@ -31,12 +31,10 @@ test('Article Creation', async ({page,}) => {
     await mainPage.gotoRegister();
     await registerPage.register(user);
 
-    const mainPageAthorized = new MainPageAthorized(page);
-    const newArticlePage = new NewArticlePage(page);
     const articlePage = new ArticlePage(page);
 
-    await mainPageAthorized.gotoNewArticle();
-    await newArticlePage.CreateNewArticle(newArticleFields);
+    await articlePage.gotoNewArticle();
+    await articlePage.CreateNewArticle(newArticleFields);
 
     await expect(articlePage.articleHeadder).toContainText(newArticleFields.title);
 });
@@ -56,11 +54,10 @@ test.describe('Articles', () => {
 
         //New article creation
 
-        const mainPageAthorized = new MainPageAthorized(page);
-        const newArticlePage = new NewArticlePage(page);
+        const articlePage = new ArticlePage(page);
 
-        await mainPageAthorized.gotoNewArticle();
-        await newArticlePage.CreateNewArticle(newArticleFields);
+        await articlePage.gotoNewArticle();
+        await articlePage.CreateNewArticle(newArticleFields);
 
     });
 
@@ -73,10 +70,9 @@ test.describe('Articles', () => {
             };
 
             const articlePage = new ArticlePage(page);
-            const editArticlePage = new EditArticlePage(page);
 
             await articlePage.gotoEditArticlePage();
-            await editArticlePage.EditArticle(editArticleFields)
+            await articlePage.EditArticle(editArticleFields)
 
             await expect(articlePage.articleHeadder).toContainText(editArticleFields.title);
         });
@@ -94,11 +90,10 @@ test.describe('Articles', () => {
         test('Article Delete', async ({page,}) => {
 
             const articlePage = new ArticlePage(page);
-            const mainPageAthorized = new MainPageAthorized(page);
 
             await articlePage.deleteArticle(page);
 
-            await expect(mainPageAthorized.mainPageFeed).toContainText('Your Feed');
+            await expect(articlePage.mainPageFeed).toContainText('Your Feed');
         });
 
         test('Comment Delete', async ({page,}) => {

@@ -1,15 +1,10 @@
-export class MainPageAthorized {
-    constructor(page) {
-        this.newArticlebutton = page.getByRole('link', { name: ' New Article' });
-        this.mainPageFeed = page.getByRole('main');
-    }
-    async gotoNewArticle() {
-        await this.newArticlebutton.click();
-    }
-};
-
 export class ArticlePage {
     constructor(page) {
+        //main page authorized
+        this.newArticlebutton = page.getByRole('link', { name: ' New Article' });
+        this.mainPageFeed = page.getByRole('main');
+
+        //Article page
         this.editArticleButton = page.getByRole('link', { name: ' Edit Article' }).first();
         this.deleteArticleButton = page.getByRole('button', { name: ' Delete Article' }).first();
         this.commentTextField =  page.getByRole('textbox', { name: 'Write a comment...' });
@@ -17,7 +12,30 @@ export class ArticlePage {
         this.deleteCommentButton = page.getByRole('button', { name: '', exact: true });
         this.articleHeadder = page.getByRole('heading');
         this.articleCommentText = page.getByRole('main');
+
+        //NewArticlePage
+        this.newArticleTitleField = page.getByRole('textbox', { name: 'Article Title' });
+        this.newArticleDescriptionField = page.getByRole('textbox', { name: 'What\'s this article about?' });
+        this.newArticleContentField = page.getByRole('textbox', { name: 'Write your article (in' });
+        this.newArticleTagField = page.getByRole('textbox', { name: 'Enter tags' });
+        this.newArticlePublishButton = page.getByRole('button', { name: 'Publish Article' });
+
+        //EditArticlePage
+        this.editArticleTitleField = page.getByRole('textbox', { name: 'Article Title' });
+        this.editArticleDescriptionField = page.getByRole('textbox', { name: 'What\'s this article about?' });
+        this.editArticleContentField = page.getByRole('textbox', { name: 'Write your article (in' });
+        this.editArticleTagField = page.getByRole('textbox', { name: 'Enter tags' });
+        this.editArticleUpdateButton = page.getByRole('button', { name: 'Update Article' });
+
+
     };
+
+    //main page authorized
+    async gotoNewArticle() {
+        await this.newArticlebutton.click();
+    }
+
+    //Article page
     async gotoEditArticlePage() {
         await this.editArticleButton.click();
     };
@@ -40,17 +58,9 @@ export class ArticlePage {
             dialog.accept();
         });
         await this.deleteCommentButton.click();
-    }
-};
-
-export class NewArticlePage {
-    constructor(page) {
-        this.newArticleTitleField = page.getByRole('textbox', { name: 'Article Title' });
-        this.newArticleDescriptionField = page.getByRole('textbox', { name: 'What\'s this article about?' });
-        this.newArticleContentField = page.getByRole('textbox', { name: 'Write your article (in' });
-        this.newArticleTagField = page.getByRole('textbox', { name: 'Enter tags' });
-        this.newArticlePublishButton = page.getByRole('button', { name: 'Publish Article' });
     };
+
+    //NewArticlePage
     async CreateNewArticle(newArticleFields) {
         const {title, description, content, tag} = newArticleFields;
         await this.newArticleTitleField.click();
@@ -63,16 +73,8 @@ export class NewArticlePage {
         await this.newArticleTagField.fill(tag);
         await this.newArticlePublishButton.click();
     };
-};
 
-export class EditArticlePage {
-    constructor(page) {
-        this.editArticleTitleField = page.getByRole('textbox', { name: 'Article Title' });
-        this.editArticleDescriptionField = page.getByRole('textbox', { name: 'What\'s this article about?' });
-        this.editArticleContentField = page.getByRole('textbox', { name: 'Write your article (in' });
-        this.editArticleTagField = page.getByRole('textbox', { name: 'Enter tags' });
-        this.editArticleUpdateButton = page.getByRole('button', { name: 'Update Article' });
-    };
+    //EditArticlePage
     async EditArticle(editArticleFields) {
         const {title, description, content, tag} = editArticleFields;
         await this.editArticleTitleField.click();
@@ -86,4 +88,5 @@ export class EditArticlePage {
         await this.editArticleUpdateButton.click();
     };
 };
+
 
