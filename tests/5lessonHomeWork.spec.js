@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { faker } from '@faker-js/faker';
-import { MainPage, RegisterPage, ArticlePage } from '../src/pages/index';
+import { MainPage, RegisterPage, ArticlePage, ManageArticlePage } from '../src/pages/index';
 
 const URL = 'https://realworld.qa.guru/';
 
@@ -32,9 +32,10 @@ test('Article Creation', async ({page,}) => {
     await registerPage.register(user);
 
     const articlePage = new ArticlePage(page);
+    const manageArticlePage = new ManageArticlePage(page)
 
     await articlePage.gotoNewArticle();
-    await articlePage.CreateNewArticle(newArticleFields);
+    await manageArticlePage.CreateNewArticle(newArticleFields);
 
     await expect(articlePage.articleHeadder).toContainText(newArticleFields.title);
 });
@@ -55,9 +56,10 @@ test.describe('Articles', () => {
         //New article creation
 
         const articlePage = new ArticlePage(page);
+        const manageArticlePage = new ManageArticlePage(page)
 
         await articlePage.gotoNewArticle();
-        await articlePage.CreateNewArticle(newArticleFields);
+        await manageArticlePage.CreateNewArticle(newArticleFields);
 
     });
 
@@ -70,9 +72,10 @@ test.describe('Articles', () => {
             };
 
             const articlePage = new ArticlePage(page);
+            const manageArticlePage = new ManageArticlePage(page)
 
             await articlePage.gotoEditArticlePage();
-            await articlePage.EditArticle(editArticleFields)
+            await manageArticlePage.EditArticle(editArticleFields)
 
             await expect(articlePage.articleHeadder).toContainText(editArticleFields.title);
         });
